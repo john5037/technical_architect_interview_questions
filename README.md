@@ -1,4 +1,3 @@
-# technical_architect_interview_questions
 # Technical Architect Interview Questions & Answers
 
 > Click :star: if you like. Pull Requests are highly appreciated.
