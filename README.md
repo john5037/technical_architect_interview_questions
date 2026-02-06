@@ -88,12 +88,29 @@ I follow an expand→backfill→contract model to maintain backward compatibilit
 
 I start with an RFC explaining the why, not just the what. A reference implementation provides a working example. Training sessions, pair programming, and templates help standardize development. CI linting enforces rules, and migrations use the Strangler pattern to lower risk.
 
+### <a id="q11"></a>11. How to optimize the Backend JavaScript application?
+
+I start by eliminating synchronous bottlenecks, moving CPU-heavy work to async flows, streams, or worker threads. Optimize memory and throughput using proper caching, connection pooling, and backpressure-aware I/O. Reduce unnecessary work through API contract tightening, batching, and idempotent operations. Decisions are driven by profiling and real traffic data, not assumptions or premature optimization.
+
+### <a id="q12"></a>12. Mention in resume like a 25% faster rollout using like a modular front end.and they said walk me through what it was done to achieve that increase in rollout speed? what baselines were used as the metrics and how did it change what to track How do you track it and measure the change?
+
+We tracked impact using lead time to production, how many components are reused per feature, and post-release defects, not just story points. baseline was average feature lead time and release cycle duration before modularization. rollout speed improved because new features reused existing components instead of rebuilding UI flows.
+We moved from a monolithic UI to domain-based, reusable frontend modules, with a shared design system and clear contracts, so teams could ship features independently without regression risk that number [25%] gain came from less rework, parallel development, and fewer cross-team dependencies, which directly shortened release cycles.
+
+### <a id="q12"></a>12.  Best practices for scalable, readable, future-proof code?
+Separation of Concerns: Keep UI components thin and move domain rules into services/composables—we used this in AI Studio so the same logic powered both the canvas editor and the sidebar inspector.Contract-first architecture: Define strict API shapes between modules to prevent accidental regressions, especially when integrating Vue + Node pipelines.
+Predictable State Ownership: One source of truth (Vuex/Pinia). We reduced duplicated computations after visual inspectors started reading state from reactive stores instead of local copies.Static Analysis & Lint Rules: Enforce SSR-safe code, unused imports, and accessibility violations early.
+
+### <a id="q13"></a>13.Have to work on a dashboard which will give you all the information to the stock. So, and you have to design that particular application[Scnerio] end users will be like in some of the country where they have like 3G of data packs will be there, So now in terms of internet connectivity, how you will plan to make it work?
+Introduce adaptive streaming: dynamically downgrade update frequency (e.g from 50ms → 500ms) when RTT or packet loss rises—this keeps UI consistent even when bandwidth drops we used similar degradation in an AI event-stream viewer. Use delta-based payloads, not full snapshots send only changed fields (price, volume, sentiment) to shrink payloads by 70–80%, critical for slow mobile networks. Implement offline/slow-mode fallbacks: automatically switch to cached data + periodic polling when WebSockets can’t sustain connection—avoids user-facing freeze.Use compressed, binary transport formats (e.g., MessagePack) instead of JSON to reduce bytes on the wire and speed parsing on low-end devices.
+
+### <a id="q14"></a>14 how internally youtube Managing their internal architecture they are following to upgrade and downgrade the video streaming on the backend side?
+YouTube are using Adaptive Bitrate Streaming (ABR) with protocols like MPEG-DASH every video is pre-encoded into multiple bitrates (144p → 4K), each split into tiny 2–4s chunks stored on CDN edges.client will continuously reports buffer health, throughput, and dropped frames, and a backend manifest file (MPD) telling the player which chunk variants exist.
+player requests higher or lower bitrate chunks dynamically no re-encoding on the fly the backend just serves different pre-generated segments and Load balancing with CDNs ensure low latency, while an ABR algorithm chooses the highest sustainable quality without causing rebuffering.
+
+
 [⬆ Back to Top](#table-of-contents)
 
 ---
 
-## Disclaimer
 
-This repository serves as a knowledge base of common technical architect interview questions. It does not guarantee coverage in real interviews—engineering discussions vary widely by company, system scale, and domain. Consider it a companion for deeper learning and architectural thinking.
-
-May your systems be scalable, your deployments be zero-downtime, and your architecture always evolve with purpose!
